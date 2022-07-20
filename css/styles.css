@@ -603,12 +603,6 @@ progress {
   height: auto;
 }
 
-.img-fluid-center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-}
 
 .img-thumbnail {
   padding: 0.25rem;
