@@ -4,8 +4,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta property="og:type" content="article"/>
         <meta property="og:url" content="http://dotslog.com/POSTS/DOT6.html"/>
-        <meta property="og:title" content="Dot 6 (How To): Operational Finance - Part One"/>
-        <meta property="og:description" content="How to automate finance tasks relating to AP & AR"/>
+        <meta property="og:title" content="Dot #6 : Operational Finance - Part One"/>
+        <meta property="og:description" content="Automating finance tasks relating to cashflows"/>
         <meta property="og:image" content="http://dotslog.com/DOTFILES/DOT5/img/pexels-tyler-lastovich-808465-min.jpg"/>
         <meta property="og:site_name" content="DotsLog"/>
         <meta charset="utf-8" />
@@ -42,8 +42,8 @@
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <div class="post-heading">
-                            <h2 >Dot 6 (How To): Operational Finance - Part One</h2>
-                            <h3 class="subheading">How to automate finance tasks relating to AP & AR</h3>
+                            <h2 >Dot #6 : Operational Finance - Part One</h2>
+                            <h3 class="subheading">Automating finance tasks relating to cashflows</h3>
                             <span class="meta">
                                 Written by
                                 <a href="../index.html">Tiago Dias</a>
@@ -62,29 +62,26 @@
                         <!-- SUMMARY-->
                         <h1 > Summary</h1>
                         <p align="justify">                         
-                            This note goes through a detailed overview of the operations relating to Accounts Receivable 
-                            and Account Payable for a young startup and explains how to automate some of the steps. 
-                            Part two and three will cover respectively Financial Reporting and Financial Planning.                                                    
-                        </p>                
-                        <!-- SECTION 1-->
-                        <h2 class="section-heading">Day to to day finance: cash flows </h2>
-                        <p align="justify">
-                            In a previous note, the key finance tasks were split as follows.
+                            This is the first note of a series of three notes that will go through day to day finance 
+                            tasks and how to automate them to minimise time spent producing numbers. <br>                                            
+                            Part one goes through a detailed overview of the operations relating to cashflows 
+                            for a young startup (series B or earlier).<br> Part two and three will cover respectively 
+                            Financial Reporting and Financial Planning.
                         </p>
                         <img class="img-fluid" src="../DOTFILES/DOT6/img/D6P1.jpg" alt="..." />
-                        <span class="caption text-muted">Figure 1: Finance key tasks.</span>
+                        <span class="caption text-muted">Figure 1: Series of three notes.</span>
                         <p align="justify">
-                            On this note we are going to drill down on the operations for the cash flows of a young 
-                            startup as per the figure below.
+                            On this note we are going to drill down finance tasks relating to Accounts Receivable (“AR”), 
+                            i.e. inflows to be received from clients and Accounts Payable (“AP”), i.e. outflows to be paid to suppliers.
                         </p>
                         <img class="img-fluid" src="../DOTFILES/DOT6/img/D6P2.jpg" alt="..." />
                         <span class="caption text-muted">Figure 2: Accounts Receivable and Accounts Payable.</span>
                         <p align="justify">
                             Cashflows are thus equal to cash inflows from clients relating to revenues net 
-                            of cash outflows paid to suppliers. As a reminder, a common source of mistakes in 
+                            of cash outflows paid to suppliers.<br> As a reminder, <strong>a common source of mistakes in 
                             numbers is to represent both as positive numbers and subtract them; to avoid this, 
                             one should represent cash inflows as a positive number (e.g £100) and cash outflows as 
-                            a negative number (e.g (£20)) and then ADD both numbers to get to cash flows (£80 = £100 + (£20)).
+                            a negative number (e.g (£20)) and then ADD both numbers</strong> to get to cash flows (£80 = £100 + (£20)).
                         </p>
 
                          <!-- SECTION 2-->
@@ -92,9 +89,9 @@
                         <p align="justify">
                             Whenever there is revenue earned, there will be an invoice sent to a 
                             client requesting payment for the service or product and the amount is 
-                            recognised in the P&L statement.  Accounts Receivables (“AR”) thus relates to 
-                            client invoices for which payment has not been received yet. These show up as a 
-                            current asset in the balance sheet (i.e. cash inflow expected soon).
+                            recognised in the P&L statement.<br> <strong> Accounts Receivables (“AR”) relates to 
+                            client invoices for which payment has not been received yet</strong>. These show up as a 
+                            current asset in the balance sheet (i.e. cash inflow expected to be received soon).
                         </p>
                         <img class="img-fluid" src="../DOTFILES/DOT6/img/D6P3.jpg" alt="..." />
                         <span class="caption text-muted">Figure 3: Accounts Receivable concept.</span>
@@ -106,20 +103,30 @@
                         <img class="img-fluid" src="../DOTFILES/DOT6/img/D6P4.jpg" alt="..." />
                         <span class="caption text-muted">Figure 4: Accounts Receivable operational steps.</span>
                         <p align="justify">
-                            Accounting systems such as Xero or Quickbooks automate steps A and B above, 
-                            however this will break above a certain volume of invoices (likely fine for up to hundreds per month), 
-                            different currencies and number of legal entities. For simple applications the following spreadsheet 
-                            <a href="https://docs.google.com/spreadsheets/d/1K5jHVBWgto4FvnvAsHJ6GQM60pnoubcpqRKjS19zJGM/edit#gid=1856528211" target="_blank">
-                                (AR automatic emails for invoices)</a>, automates sending an email with an invoice to a client 
-                            using a google apps script (see appendix for details).
+                            <strong>Steps A and B:</strong> For simple applications the following spreadsheet 
+                                    <a href="https://docs.google.com/spreadsheets/d/1K5jHVBWgto4FvnvAsHJ6GQM60pnoubcpqRKjS19zJGM/edit#gid=1856528211" target="_blank">
+                                        (AR automatic emails for invoices)</a>, automates sending an email with an invoice to a client 
+                                    using a google apps script (see appendix for details).<br>
+                                    Accounting systems such as Xero or Quickbooks automate are better suited to automate steps A and B above, 
+                                    however this will break above a certain volume of invoices (likely fine for up to hundreds per month), 
+                            different currencies and number of legal entities.                           
+                        </p>
+                        <p align="justify">
+                            <strong>Step C:</strong> Clients do not always pay on time, so it is common to use Xero or Quickbooks to chase 
+                            payments automatically for this step.
+                        </p>
+                        <p align="justify">
+                            <strong>Step D:</strong> The accounting system will receive the bank feeds for each operational bank account. The bookkeeper 
+                            will manually match an inflow to an invoice (there are startups trying to automate this...).
                         </p>
                          <!-- SECTION 3-->
                         <h2 class="section-heading">Day to to day finance: Accounts Payable</h2>
                         <p align="justify">
                             Whenever there is a cost incurred, there will be an invoice received from a supplier 
-                            requesting payment for the service or product and the amount is recognised in the P&L. 
-                            Accounts Payable (“AP”) thus relates to unpaid supplier invoices. These show up as a current 
-                            liability in the balance sheet (i.e. cash outflow expected soon).
+                            requesting payment for the service or product and the amount is recognised in the P&L
+                            (unless it was already accrued for in the past). <br>
+                            <strong>Accounts Payable (“AP”) relates to unpaid supplier invoices</strong>. These show up as a current 
+                            liability in the balance sheet (i.e. cash outflow expected to be paid soon).
                         </p>
                         <img class="img-fluid" src="../DOTFILES/DOT6/img/D6P5.jpg" alt="..." />
                         <span class="caption text-muted">Figure 5: Accounts Payable concept.</span>
@@ -134,72 +141,83 @@
                             First let's lay out the process that requires improvement.
                             <ul align="justify">
                                 <li><strong>Step 1:</strong> supplier sends an invoice to an employee at the Company 
-                                    (the one that requested the service or goods). In some situations, 
-                                    this is sent to Finance who then needs to figure out who should approve it internally.
+                                    (the one that requested the service or goods). In some companies, 
+                                    this is sent to Finance who then needs to figure out who should approve it internally. 
+                                    <strong> This wastes a lot of time.</strong>
                                 </li>
                                 <li><strong>Step 2:</strong> the employee may exchange several emails with the supplier 
-                                    if there are mistakes in the invoice.
+                                    if there are mistakes in the invoice.<strong> Again, this wastes a lot of time.</strong>
                                 </li>
                                 <li><strong>Step 3:</strong> the employee then forwards the approved invoice to an email 
-                                    distribution list which forward’s emails to an Optical Recognition System (OCR) to digitalise the invoice. 
-                                    This is then push to the accounting system (Xero below in this example)
+                                    distribution list, which forward’s emails to an Optical Recognition System (OCR) to digitalise the invoice. 
+                                    This is then pushed to the accounting system (Xero below in this example)
                                     <ul align="justify">
                                         <li>
-                                            There is risk that an unapproved invoices get sent to the accounting 
-                                            system as the OCR as not checks in place for emails received
+                                            <strong>There is risk that an unapproved invoices get sent to the accounting 
+                                            system as the OCR as not checks in place for emails received. Even worse, they may actually end up being paid.</strong>
                                         </li>
                                     </ul>    
                                 </li>
-                                <li><strong>Step 4:</strong> there is typically a weekly pay run to pay approved invoices due
+                                <li><strong>Step 4:</strong> there is typically a weekly pay run to pay approved invoices due. The bookkeeper needs to email the head of the finance department 
+                                    the payments due so that it can approve setting up payments.<strong> Time is wasted.</strong>
+                                    <ul align="justify">
+                                    <li><strong>This is also not great from a cashflow perspective, as some invoices get paid ahead of their due date</strong>
+                                        (e.g Friday payrun would include all invoices with due dates up until next Thursday)
+                                    </ul>
+                                </li>
                                 </li>
                                 <li><strong>Step 5:</strong> there is one payment set up in the online banking system, 
-                                    for each invoice, which is very time consuming.
+                                    for each invoice. <strong>This is very time consuming.</strong>
                                 </li>
+                                <li><strong>Step 6:</strong> Bookkeeper sends an email to an approver to release the payments. 
+                                    The approver then needs to login to online banking system and release each payment.<strong> You guessed...Time wasted again.</strong>
+                                </li>
+                                <br>
+                                Overall this process will take many email exchanges and lot of time wasted. <strong>In particular, setting up a payrun and releasing payments will take several hours. There is a much better way to do this.</strong> 
                              </ul>
                         </p>
                         <img class="img-fluid" src="../DOTFILES/DOT6/img/D6P7.jpg" alt="..." />
                         <span class="caption text-muted">Figure 7: Detailed operations to approve and pay invoice</span>
                         <p align="justify">
-                            Now let's lay out an almost fully automated process.
+                            Now let's lay out a much better process, that is almost fully automated.
                             <ul align="justify">
                                 <li><strong>Step 1:</strong> supplier sends an invoice to an email distribution list. 
-                                    This contains an email to an AP system (link here -  
-                                    <a href="https://cp.corpayone.com/" target="_blank"><strong>Corpay One</strong></a>
-                                    ) that deals with the OCR.
+                                    This contains an email to an AP system (link here for what I use -  
+                                    <a href="https://cp.corpayone.com/" target="_blank"><u>Corpay One</u></a>) that deals with the OCR.
 
                                 </li>
                                 <li><strong>Step 2:</strong>  AP systems automatically upload invoices to the platform.
                                 </li>
                                 <li><strong>Step 3:</strong> AP systems allow to set up workflows based on different rules
-                                     which are used to automatically determine the Approver of the invoice. T
-                                     his automates a lot of the process already.
+                                     which are used to automatically determine the Approver of the invoice. 
+                                     <Strong>Everything is automated and no time is wasted by finance or company employees.</Strong>
                                 </li>
-                                <li><strong>Step 4:</strong> Once approved goes to the bookkeeper.  There is NO risk 
-                                    that an unapproved invoices get sent to the accounting system as otherwise it would not receive it.
+                                <li><strong>Step 4:</strong> Once invoice is approved it goes to the bookkeeper. <strong>There is NO risk 
+                                    that an unapproved invoices get sent to the accounting system or paid. So much better.</strong> 
                                 </li>
-                                <li><strong>Step 5:</strong> Bookkeeper pushes approved invoices to the accounting system.
+                                <li><strong>Step 5:</strong> Bookkeeper acts as a gatekeeper to any information sent to the accounting system.
+                                    If all fine, it pushes approved invoices into the system.
                                 </li>
                              </ul>
                         </p>
                         <img class="img-fluid" src="../DOTFILES/DOT6/img/D6P8.jpg" alt="..." />
                         <span class="caption text-muted">Figure 8: Fully automated process to deal with approving invoices.</span>
                         <p align="justify">
-                            Now let's lay out an almost fully automated process.
                             <ul align="justify">
                                 <li><strong>Step 6:</strong> Accounting system used to automatically provide information to Wise 
-                                    on all invoices to be paid (payment details and amount)
+                                    on all invoices to be paid (payment details and amount).
                                 </li>
-                                <li><strong>Step 7:</strong> One transfer set up to pay with full amount of invoices to be paid
+                                <li><strong>Step 7:</strong> One transfer set up to pay the full amount of invoices to be paid.
                                 </li>
-                                <li><strong>Step 8:</strong> One funds are received at Wise, it automatically pays each supplier individually
+                                <li><strong>Step 8:</strong> Once funds are received at Wise, it automatically pays each supplier individually.
                                 </li>
                             </ul>
                             <img class="img-fluid" src="../DOTFILES/DOT6/img/D6P9.jpg" alt="..." />
                         <span class="caption text-muted">Figure 9: Almost fully automated process to deal with approving invoices.</span>
                         <p align="justify">
-                            This is a much more automated process and it is much less likely that there will be any mistakes done. 
-                            It takes only minutes (instead one hour or more) to do the payrun. The final step to fully automate this 
-                            is to make payments from the AP platform which will be launched soon.
+                            <strong>This is a much more automated process and it is much less likely that mistakes are done. 
+                            It takes like 10 minutes to do the payrun (vs several hours). The final step to fully automate the process 
+                            is to make payments from the AP platform (this will be available in a near future).</strong>
                         </p>
                          <!-- END-->
                     <p align="justify">If you require support or have any questions my contact is: <a ><img class="img-fluid" src="../assets/img/email.jpg" alt="..." /></a></p>
