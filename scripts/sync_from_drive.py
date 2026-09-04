@@ -59,6 +59,12 @@ ALLOWED_EXTENSIONS = {
 
 ALWAYS_ALLOWED_NAMES = {"cname"}
 
+# Site chrome that should survive Drive overlays of older HTML/CSS.
+PRESERVE_RELATIVE_PATHS = {
+    "css/theme.css",
+    "js/scripts.js",
+}
+
 
 def repo_root() -> Path:
     return Path(__file__).resolve().parent.parent
@@ -288,6 +294,9 @@ def sync(
         if dest is None:
             print(f"skip unsafe path: {relative}")
             continue
+        if relative.replace("\\", "/") in PRESERVE_RELATIVE_PATHS:
+            print(f"preserve: {relative}")
+            continue
         content = download_file(service, file_id)
         action = write_file(dest, content, dry_run)
         if action != "unchanged":
@@ -296,6 +305,8 @@ def sync(
 
     if delete_missing:
         for relative in sorted(synced_paths_under(root) - set(drive_files)):
+            if relative.replace("\\", "/") in PRESERVE_RELATIVE_PATHS:
+                continue
             dest = safe_join(root, relative)
             if dest is None or not dest.exists():
                 continue
