@@ -98,14 +98,14 @@ class SyncTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             theme = root / "css" / "theme.css"
-            scripts = root / "js" / "scripts.js"
+            preview = root / "preview" / "index.html"
             theme.parent.mkdir()
-            scripts.parent.mkdir()
+            preview.parent.mkdir()
             theme.write_text("local-theme")
-            scripts.write_text("local-scripts")
+            preview.write_text("local-preview")
 
             def fake_collect(service, folder_id, prefix=""):
-                return {"css/theme.css": "file-theme", "js/scripts.js": "file-js", "index.html": "file-1"}
+                return {"css/theme.css": "file-theme", "preview/index.html": "file-preview", "index.html": "file-1"}
 
             def fake_download(service, file_id):
                 return b"from-drive"
@@ -116,7 +116,7 @@ class SyncTests(unittest.TestCase):
                 sync.sync(root, None, "folder", delete_missing=True, dry_run=False)
 
             self.assertEqual(theme.read_text(), "local-theme")
-            self.assertEqual(scripts.read_text(), "local-scripts")
+            self.assertEqual(preview.read_text(), "local-preview")
             self.assertEqual((root / "index.html").read_bytes(), b"from-drive")
 
 

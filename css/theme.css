@@ -591,3 +591,37 @@ blockquote {
   background: var(--accent);
   color: #fff;
 }
+
+.preview-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1080;
+  padding: 0.5rem 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+
+.preview-banner a {
+  color: #f0c7a8;
+}
+
+body:has(.preview-banner) #mainNav {
+  top: 2.15rem;
+}
+
+body:has(.preview-banner) #mainNav.is-scrolled,
+body:has(.preview-banner) #mainNav.is-fixed {
+  top: 2.15rem;
+}
+
+@media (min-width: 992px) {
+  body:has(.preview-banner) header.masthead {
+    padding-top: 13.5rem;
+  }
+}
