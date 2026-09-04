@@ -28,6 +28,7 @@ jobs:
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
+          DRIVE_SUBFOLDER: ${{ secrets.DRIVE_SUBFOLDER }}
         run: python scripts/sync_from_drive.py
 
       - name: Commit and push if Drive changed files

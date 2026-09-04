@@ -70,9 +70,9 @@ class SyncTests(unittest.TestCase):
             def fake_download(service, file_id):
                 return b"from-drive" if file_id == "file-1" else b"css-from-drive"
 
-            with patch.object(sync, "collect_drive_files", fake_collect), patch.object(
-                sync, "download_file", fake_download
-            ):
+            with patch.object(sync, "resolve_sync_folder_id", return_value="folder"), patch.object(
+                sync, "collect_drive_files", fake_collect
+            ), patch.object(sync, "download_file", fake_download):
                 changes = sync.sync(
                     root, service=None, folder_id="folder", delete_missing=False, dry_run=False
                 )
@@ -87,12 +87,54 @@ class SyncTests(unittest.TestCase):
             root = Path(tmp)
             (root / "old.html").write_text("remove me")
 
-            with patch.object(sync, "collect_drive_files", return_value={}), patch.object(
-                sync, "download_file"
-            ):
+            with patch.object(sync, "resolve_sync_folder_id", return_value="folder"), patch.object(
+                sync, "collect_drive_files", return_value={}
+            ), patch.object(sync, "download_file"):
                 sync.sync(root, None, "folder", delete_missing=True, dry_run=False)
 
             self.assertFalse((root / "old.html").exists())
+
+
+class ResolveFolderTests(unittest.TestCase):
+    def test_uses_named_subfolder(self):
+        tree = {
+            "projects": [
+                {"id": "web", "name": "Website (DotsLog)", "mimeType": sync.FOLDER_MIME},
+                {"id": "work", "name": "Work", "mimeType": sync.FOLDER_MIME},
+            ],
+            "web": [{"id": "idx", "name": "index.html", "mimeType": "text/html"}],
+            "work": [{"id": "note", "name": "notes.html", "mimeType": "text/html"}],
+        }
+
+        def fake_list(service, folder_id):
+            return tree[folder_id]
+
+        with patch.object(sync, "list_children", fake_list):
+            chosen = sync.resolve_sync_folder_id(None, "projects", subfolder="Website (DotsLog)")
+        self.assertEqual(chosen, "web")
+
+    def test_auto_picks_only_child_with_index_html(self):
+        tree = {
+            "projects": [
+                {"id": "web", "name": "Website (DotsLog)", "mimeType": sync.FOLDER_MIME},
+                {"id": "ai", "name": "AI sandbox", "mimeType": sync.FOLDER_MIME},
+                {"id": "work", "name": "Work", "mimeType": sync.FOLDER_MIME},
+            ],
+            "web": [{"id": "idx", "name": "index.html", "mimeType": "text/html"}],
+            "ai": [{"id": "py", "name": "app.py", "mimeType": "text/x-python"}],
+            "work": [],
+        }
+
+        def fake_list(service, folder_id):
+            return tree[folder_id]
+
+        with patch.object(sync, "list_children", fake_list):
+            chosen = sync.resolve_sync_folder_id(None, "projects")
+        self.assertEqual(chosen, "web")
+
+    def test_folder_names_ignore_spaces_and_case(self):
+        self.assertTrue(sync.folder_names_match("Website (DotsLog)", "website(dotslog)"))
+        self.assertFalse(sync.folder_names_match("Website", "Work"))
 
 
 class MainTests(unittest.TestCase):

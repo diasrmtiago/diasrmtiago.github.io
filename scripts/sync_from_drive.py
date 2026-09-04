@@ -6,9 +6,14 @@ format and are not the HTML pages GitHub Pages publishes.
 
 Required environment variables:
   GOOGLE_SERVICE_ACCOUNT_JSON  Service account key JSON
-  DRIVE_FOLDER_ID              Drive folder whose contents map to the repo root
+  DRIVE_FOLDER_ID              Drive folder to start from. This can be the
+                               parent Projects folder; the website child is
+                               chosen automatically (the subfolder that
+                               contains index.html).
 
 Optional:
+  DRIVE_SUBFOLDER              Child folder name to copy, e.g. Website (DotsLog).
+                               Use this if more than one subfolder has index.html.
   DRIVE_SYNC_DELETE=true       Remove repo files that disappeared from Drive
   DRY_RUN=true                 Print actions without writing files
 """
@@ -106,6 +111,79 @@ def load_credentials():
     return service_account.Credentials.from_service_account_info(info, scopes=SCOPES)
 
 
+def normalize_folder_name(name: str) -> str:
+    return "".join(name.lower().split())
+
+
+def folder_names_match(left: str, right: str) -> bool:
+    return normalize_folder_name(left) == normalize_folder_name(right)
+
+
+def has_index_html(items: list[dict]) -> bool:
+    return any(
+        item.get("name", "").lower() == "index.html" and item.get("mimeType") != FOLDER_MIME
+        for item in items
+    )
+
+
+def find_named_child_folder(children: list[dict], name: str) -> dict | None:
+    matches = [
+        item
+        for item in children
+        if item.get("mimeType") == FOLDER_MIME and folder_names_match(item.get("name", ""), name)
+    ]
+    return matches[0] if matches else None
+
+
+def resolve_sync_folder_id(service, folder_id: str, subfolder: str = "") -> str:
+    """Return the Drive folder whose contents should map to the repo root.
+
+    The website repo must not copy every Projects child (Work / AI sandbox)
+    onto the public site. Prefer a named child, otherwise the folder that
+    already contains index.html, otherwise the only child folder that does.
+    """
+    children = list_children(service, folder_id)
+    if subfolder:
+        current_id = folder_id
+        current_children = children
+        for part in Path(subfolder).parts:
+            match = find_named_child_folder(current_children, part)
+            if match is None:
+                names = [item["name"] for item in current_children if item.get("mimeType") == FOLDER_MIME]
+                raise ValueError(
+                    f"DRIVE_SUBFOLDER part {part!r} was not found. Folder names here: {names}"
+                )
+            current_id = match["id"]
+            current_children = list_children(service, current_id)
+        print(f"using Drive subfolder: {subfolder}")
+        return current_id
+
+    if has_index_html(children):
+        return folder_id
+
+    website_children = []
+    for item in children:
+        if item.get("mimeType") != FOLDER_MIME or is_skipped_dir(item["name"]):
+            continue
+        grandchildren = list_children(service, item["id"])
+        if has_index_html(grandchildren):
+            website_children.append(item)
+
+    if len(website_children) == 1:
+        chosen = website_children[0]
+        print(f"using website subfolder: {chosen['name']}")
+        return chosen["id"]
+
+    if len(website_children) > 1:
+        names = [item["name"] for item in website_children]
+        raise ValueError(
+            "Several subfolders contain index.html. Set GitHub secret "
+            f"DRIVE_SUBFOLDER to one of: {names}"
+        )
+
+    return folder_id
+
+
 def list_children(service, folder_id: str) -> list[dict]:
     files: list[dict] = []
     page_token = None
@@ -193,8 +271,16 @@ def synced_paths_under(root: Path) -> set[str]:
     return paths
 
 
-def sync(root: Path, service, folder_id: str, delete_missing: bool, dry_run: bool) -> int:
-    drive_files = collect_drive_files(service, folder_id)
+def sync(
+    root: Path,
+    service,
+    folder_id: str,
+    delete_missing: bool,
+    dry_run: bool,
+    subfolder: str = "",
+) -> int:
+    sync_folder_id = resolve_sync_folder_id(service, folder_id, subfolder)
+    drive_files = collect_drive_files(service, sync_folder_id)
     changes = 0
 
     for relative, file_id in sorted(drive_files.items()):
@@ -241,11 +327,23 @@ def main() -> int:
 
     dry_run = os.environ.get("DRY_RUN", "").lower() in {"1", "true", "yes"}
     delete_missing = os.environ.get("DRIVE_SYNC_DELETE", "").lower() in {"1", "true", "yes"}
+    subfolder = os.environ.get("DRIVE_SUBFOLDER", "").strip()
     root = repo_root()
     from googleapiclient.discovery import build
 
     service = build("drive", "v3", credentials=credentials, cache_discovery=False)
-    changes = sync(root, service, folder_id, delete_missing=delete_missing, dry_run=dry_run)
+    try:
+        changes = sync(
+            root,
+            service,
+            folder_id,
+            delete_missing=delete_missing,
+            dry_run=dry_run,
+            subfolder=subfolder,
+        )
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
     print(f"done: {changes} change(s)")
     return 0
 
