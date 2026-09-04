@@ -94,6 +94,31 @@ class SyncTests(unittest.TestCase):
 
             self.assertFalse((root / "old.html").exists())
 
+    def test_preserves_theme_chrome_from_drive_overlay(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            theme = root / "css" / "theme.css"
+            preview = root / "preview" / "index.html"
+            theme.parent.mkdir()
+            preview.parent.mkdir()
+            theme.write_text("local-theme")
+            preview.write_text("local-preview")
+
+            def fake_collect(service, folder_id, prefix=""):
+                return {"css/theme.css": "file-theme", "preview/index.html": "file-preview", "index.html": "file-1"}
+
+            def fake_download(service, file_id):
+                return b"from-drive"
+
+            with patch.object(sync, "resolve_sync_folder_id", return_value="folder"), patch.object(
+                sync, "collect_drive_files", fake_collect
+            ), patch.object(sync, "download_file", fake_download):
+                sync.sync(root, None, "folder", delete_missing=True, dry_run=False)
+
+            self.assertEqual(theme.read_text(), "local-theme")
+            self.assertEqual(preview.read_text(), "local-preview")
+            self.assertEqual((root / "index.html").read_bytes(), b"from-drive")
+
 
 class ResolveFolderTests(unittest.TestCase):
     def test_uses_named_subfolder(self):
