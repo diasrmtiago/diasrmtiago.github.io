@@ -1,0 +1,44 @@
+name: Sync from Google Drive
+
+on:
+  # GitHub only runs scheduled workflows on the default branch (main).
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the website
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Drive client
+        run: pip install --quiet google-api-python-client google-auth
+
+      - name: Copy files from Drive
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
+          DRIVE_SUBFOLDER: ${{ secrets.DRIVE_SUBFOLDER }}
+        run: python scripts/sync_from_drive.py
+
+      - name: Commit and push if Drive changed files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No website file changes from Drive."
+            exit 0
+          fi
+          git commit -m "Sync website files from Google Drive"
+          git push

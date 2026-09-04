@@ -1,0 +1,4 @@
+# Local Google service-account keys. Never commit these.
+drive-service-account.json
+*-service-account*.json
+scripts/__pycache__/
